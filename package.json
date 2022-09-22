@@ -7,8 +7,8 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "dev": "set NODE_ENV=develop && nodemon server.ts",
-    "prod": "set NODE_ENV=production && nodemon server.ts",
+    "dev": "set NODE_ENV=develop && nodemon ./src/server.ts",
+    "prod": "set NODE_ENV=production && nodemon ./src/server.ts",
     "debug": "ndb server.ts"
   },
   "dependencies": {

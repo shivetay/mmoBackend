@@ -22,7 +22,7 @@ const DB = process.env.MONGO_DB?.replace(
   process.env.DB_PASSWORD as string
 );
 
-const application = require("./src/app");
+const application = require("./app");
 
 mongoose
   .connect(DB, {})
