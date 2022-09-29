@@ -14,6 +14,7 @@ process.on("uncaughtException", (err: Error) => {
   process.exit(1);
 });
 
+// ! !== develop = develop O_o
 const dotenvConfig =
   process.env.NODE_ENV !== "develop" ? "./dev.env" : "./prod.env";
 

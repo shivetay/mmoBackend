@@ -5,6 +5,9 @@
  **/
 
 import express from "express";
+import { UserController } from "../controllers";
+
+const userController = new UserController();
 
 export const userRouter = express.Router();
 
@@ -14,7 +17,7 @@ get all users
 protected
 /users/
 */
-userRouter.route("/").get();
+userRouter.route("/").get(userController.allUsers);
 
 /*
 GET
@@ -23,7 +26,7 @@ protected
 /users/:id
 */
 
-userRouter.route("/:id").get().patch().delete();
+userRouter.route("/:id").get(userController.getOneUser).patch().delete();
 
 /*
 GET

@@ -14,8 +14,8 @@ import { CustomError } from "./utils";
 export const app = express();
 
 /* middleware */
-
-if (process.env.NODE_ENV === "develop") {
+// ! !== develop = develop O_o
+if (process.env.NODE_ENV !== "develop") {
   app.use(morgan("dev"));
 }
 
