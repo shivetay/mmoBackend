@@ -14,10 +14,15 @@ export const userRouter = express.Router();
 /*
 GET
 get all users
+POST
+create user
 protected
 /users/
 */
-userRouter.route("/").get(userController.allUsers);
+userRouter
+  .route("/")
+  .get(userController.allUsers)
+  .post(userController.createUser);
 
 /*
 GET

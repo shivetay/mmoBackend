@@ -10,7 +10,7 @@ interface IUserSchema {
   name: string;
   email: string;
   password: string;
-  passwordConfirm: string;
+  passwordConfirm: string | undefined;
   active: boolean;
   race: string;
 }
@@ -34,16 +34,14 @@ const userSchema = new mongoose.Schema<IUserSchema, Model<IUserSchema>>({
   },
   passwordConfirm: {
     type: String,
-    // require: [true, "Name is required"],
     require: true,
-    // ! types issue with validator
-    // validate: {
-    //   //only works on save!!
-    //   validator: function (el: any) {
-    //     return el === this.password;
-    //   },
-    //   message: "password is not the same",
-    // },
+    validate: {
+      //only works on save!!
+      validator: function (el: string) {
+        return el === this.password;
+      },
+      message: "password is not the same",
+    },
   },
   race: { type: String },
   active: {
@@ -51,6 +49,12 @@ const userSchema = new mongoose.Schema<IUserSchema, Model<IUserSchema>>({
     default: true,
     select: false,
   },
+});
+
+userSchema.pre("save", async function (next) {
+  // Delete passwordConfirm field
+  this.passwordConfirm = undefined;
+  next();
 });
 
 export const User = mongoose.model("User", userSchema);

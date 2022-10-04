@@ -27,11 +27,21 @@ export class UserController {
     }
   };
 
-  public createUser = (req: Request, res: Response) => {
-    res.status(500).json({
-      status: "ERROR",
-      message: "Not implemented",
-    });
+  public createUser = async (req: Request, res: Response) => {
+    try {
+      const newUser = await User.create(req.body);
+      res.status(200).json({
+        status: StatusCodeTypes.SUCCESS,
+        data: {
+          user: newUser,
+        },
+      });
+    } catch (error) {
+      res.status(400).json({
+        status: StatusCodeTypes.FAILED,
+        message: error,
+      });
+    }
   };
 
   public getOneUser = async (
