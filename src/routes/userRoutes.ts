@@ -5,11 +5,20 @@
  **/
 
 import express from "express";
-import { UserController } from "../controllers";
+import { AuthController, UserController } from "../controllers";
 
 const userController = new UserController();
+const authController = new AuthController();
 
 export const userRouter = express.Router();
+
+/*
+POST
+sign in/create user
+public
+/signup
+*/
+userRouter.post("/signup", authController.signUp);
 
 /*
 GET

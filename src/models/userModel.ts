@@ -5,6 +5,7 @@
  **/
 import mongoose, { Model } from "mongoose";
 import validator from "validator";
+import bcrypt from "bcryptjs";
 
 interface IUserSchema {
   name: string;
@@ -13,6 +14,7 @@ interface IUserSchema {
   passwordConfirm: string | undefined;
   active: boolean;
   race: string;
+  role: string;
 }
 
 const userSchema = new mongoose.Schema<IUserSchema, Model<IUserSchema>>({
@@ -36,7 +38,7 @@ const userSchema = new mongoose.Schema<IUserSchema, Model<IUserSchema>>({
     type: String,
     require: true,
     validate: {
-      //only works on save!!
+      // **only works on create/save
       validator: function (el: string) {
         return el === this.password;
       },
@@ -49,9 +51,20 @@ const userSchema = new mongoose.Schema<IUserSchema, Model<IUserSchema>>({
     default: true,
     select: false,
   },
+  role: {
+    type: String,
+    enum: ["user", "admin"],
+    default: "user",
+  },
 });
 
 userSchema.pre("save", async function (next) {
+  // Only run this function if password was actually modified
+  if (!this.isModified("password")) return next();
+
+  //hash password cost 12
+  this.password = await bcrypt.hash(this.password, 12);
+
   // Delete passwordConfirm field
   this.passwordConfirm = undefined;
   next();

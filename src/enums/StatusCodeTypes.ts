@@ -8,4 +8,5 @@ export enum StatusCodeTypes {
   FAILED = "Failed",
   SUCCESS = "Success",
   FAIL = "Fail",
+  ERROR = "Error",
 }

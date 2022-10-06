@@ -4,3 +4,4 @@
  * @2022
  **/
 export * from "./userController";
+export * from "./authController";
