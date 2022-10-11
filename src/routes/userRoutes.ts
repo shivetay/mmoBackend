@@ -16,9 +16,11 @@ export const userRouter = express.Router();
 POST
 sign in/create user
 public
-/signup
+/users/signup
+/users/login
 */
 userRouter.post("/signup", authController.signUp);
+userRouter.post("/login", authController.login);
 
 /*
 GET

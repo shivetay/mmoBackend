@@ -15,6 +15,9 @@ interface IUserSchema {
   active: boolean;
   race: string;
   role: string;
+  level: number;
+  experience: number;
+  correctPassword: (candidatePassword: string, userPassword: string) => void;
 }
 
 const userSchema = new mongoose.Schema<IUserSchema, Model<IUserSchema>>({
@@ -56,6 +59,11 @@ const userSchema = new mongoose.Schema<IUserSchema, Model<IUserSchema>>({
     enum: ["user", "admin"],
     default: "user",
   },
+  level: { type: Number, default: 1 },
+  experience: {
+    type: Number,
+    default: 0,
+  },
 });
 
 userSchema.pre("save", async function (next) {
@@ -69,5 +77,13 @@ userSchema.pre("save", async function (next) {
   this.passwordConfirm = undefined;
   next();
 });
+
+userSchema.methods.correctPassword = async function (
+  candidatePassword: string,
+  userPassword: string
+) {
+  //return true if password is the same
+  return await bcrypt.compare(candidatePassword, userPassword);
+};
 
 export const User = mongoose.model("User", userSchema);
