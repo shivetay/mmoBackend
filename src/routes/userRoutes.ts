@@ -42,7 +42,11 @@ protected
 /users/:id
 */
 
-userRouter.route("/:id").get(userController.getOneUser).patch().delete();
+userRouter
+  .route("/:id")
+  .get(authController.protect, userController.getOneUser)
+  .patch()
+  .delete();
 
 /*
 GET

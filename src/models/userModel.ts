@@ -7,17 +7,19 @@ import mongoose, { Model } from "mongoose";
 import validator from "validator";
 import bcrypt from "bcryptjs";
 
-interface IUserSchema {
+export interface IUserSchema {
   name: string;
   email: string;
   password: string;
   passwordConfirm: string | undefined;
+  passwordChangedAt: Date | number;
   active: boolean;
   race: string;
   role: string;
   level: number;
   experience: number;
   correctPassword: (candidatePassword: string, userPassword: string) => void;
+  changedPasswordAfter: (iat: any) => boolean;
 }
 
 const userSchema = new mongoose.Schema<IUserSchema, Model<IUserSchema>>({
@@ -48,6 +50,7 @@ const userSchema = new mongoose.Schema<IUserSchema, Model<IUserSchema>>({
       message: "password is not the same",
     },
   },
+  passwordChangedAt: Date || Number,
   race: { type: String },
   active: {
     type: Boolean,
@@ -78,12 +81,33 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
+userSchema.pre("save", function (next) {
+  if (!this.isModified("password") || this.isNew) return next();
+
+  this.passwordChangedAt = Date.now() - 1000;
+  next();
+});
+
 userSchema.methods.correctPassword = async function (
   candidatePassword: string,
   userPassword: string
 ) {
   //return true if password is the same
   return await bcrypt.compare(candidatePassword, userPassword);
+};
+
+userSchema.methods.changedPasswordAfter = function (
+  JWTTimeStamp: any
+): boolean {
+  console.log(this.passwordChangedAt, JWTTimeStamp);
+  if (this.passwordChangedAt) {
+    const changedTimestamp = this.passwordChangedAt.getTime() / (1000 * 10);
+
+    return JWTTimeStamp < changedTimestamp;
+  }
+
+  // False means NOT changed
+  return false;
 };
 
 export const User = mongoose.model("User", userSchema);
