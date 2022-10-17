@@ -4,8 +4,8 @@
  * @2022
  **/
 
-const mongoose = require("mongoose");
-const dotenv = require("dotenv");
+import mongoose from "mongoose";
+import dotenv from "dotenv";
 
 // shut down when error
 process.on("uncaughtException", (err: Error) => {
@@ -14,7 +14,11 @@ process.on("uncaughtException", (err: Error) => {
   process.exit(1);
 });
 
-dotenv.config({ path: `./dev.env` });
+// ! !== develop = develop O_o
+const dotenvConfig =
+  process.env.NODE_ENV !== "develop" ? "./dev.env" : "./prod.env";
+
+dotenv.config({ path: `${dotenvConfig}` });
 
 // DB connection
 const DB = process.env.MONGO_DB?.replace(
@@ -25,7 +29,7 @@ const DB = process.env.MONGO_DB?.replace(
 const application = require("./app");
 
 mongoose
-  .connect(DB, {})
+  .connect(DB as string, {})
   .then(() => {})
   .catch((err: Error) => console.log(err));
 
