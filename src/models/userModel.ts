@@ -3,18 +3,18 @@
  * Łukasz Dawidowicz
  * @2022
  **/
-import mongoose, { Model } from "mongoose";
+import mongoose, { Document, Model, Schema, Types } from "mongoose";
 import validator from "validator";
 import bcrypt from "bcryptjs";
 
-export interface IUserSchema {
+export interface IUserSchema extends Document {
   name: string;
   email: string;
   password: string;
   passwordConfirm: string | undefined;
   passwordChangedAt: Date | number;
   active: boolean;
-  race: string;
+  race: Types.ObjectId;
   role: string;
   level: number;
   experience: number;
@@ -51,7 +51,7 @@ const userSchema = new mongoose.Schema<IUserSchema, Model<IUserSchema>>({
     },
   },
   passwordChangedAt: Date || Number,
-  race: { type: String },
+  race: { type: Schema.Types.ObjectId, ref: "Race" },
   active: {
     type: Boolean,
     default: true,
@@ -78,6 +78,14 @@ userSchema.pre("save", async function (next) {
 
   // Delete passwordConfirm field
   this.passwordConfirm = undefined;
+  next();
+});
+
+userSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: "race",
+    select: "name",
+  });
   next();
 });
 
@@ -110,4 +118,4 @@ userSchema.methods.changedPasswordAfter = function (
   return false;
 };
 
-export const User = mongoose.model("User", userSchema);
+export const User = mongoose.model<IUserSchema>("User", userSchema);

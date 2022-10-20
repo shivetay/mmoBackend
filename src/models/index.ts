@@ -5,3 +5,4 @@
  **/
 
 export * from "./userModel";
+export * from "./userModel";
