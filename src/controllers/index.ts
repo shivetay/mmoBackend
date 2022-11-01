@@ -5,3 +5,5 @@
  **/
 export * from "./userController";
 export * from "./authController";
+export * from "./raceController";
+export * from "./buildingController";

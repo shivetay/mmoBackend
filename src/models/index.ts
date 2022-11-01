@@ -5,4 +5,5 @@
  **/
 
 export * from "./userModel";
-export * from "./userModel";
+export * from "./racesModel";
+export * from "./buildingModel";

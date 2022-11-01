@@ -3,15 +3,15 @@
  * Łukasz Dawidowicz
  * @2022
  **/
-import mongoose, { Model, Schema, Types } from "mongoose";
+import mongoose, { Model } from "mongoose";
 
 interface IBuildingSchema {
-  name: string;
-  description: string;
+  buildingName: string;
+  description?: string;
   race: string;
-  buildingType: string;
+  buildingType?: string;
   level: number;
-  bonus: string[];
+  bonus?: string[];
 }
 
 const buildingSchema = new mongoose.Schema<
@@ -19,7 +19,7 @@ const buildingSchema = new mongoose.Schema<
   Model<IBuildingSchema>
 >(
   {
-    name: String,
+    buildingName: String,
     description: String,
     buildingType: String,
     level: {
@@ -27,7 +27,10 @@ const buildingSchema = new mongoose.Schema<
       default: 1,
     },
     bonus: [String],
-    race: String,
+    race: {
+      type: String,
+      enum: ["orc", "human", "elvs", "nekro"],
+    },
   },
   {
     toJSON: { virtuals: true },

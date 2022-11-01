@@ -4,22 +4,21 @@
  * @2022
  **/
 
-import mongoose, { Model, Schema, Types } from "mongoose";
+import mongoose, { Model } from "mongoose";
 
 export interface IRaceSchema {
   name: string;
-  buildings: Types.ObjectId;
+  buildings?: any;
   description: string;
 }
 
 const raceSchema = new mongoose.Schema<IRaceSchema, Model<IRaceSchema>>(
   {
-    name: String,
-    description: String,
-    buildings: {
-      types: Schema.Types.ObjectId,
-      ref: "Building",
+    name: {
+      type: String,
+      unique: true,
     },
+    description: String,
   },
   {
     toJSON: { virtuals: true },
@@ -27,10 +26,17 @@ const raceSchema = new mongoose.Schema<IRaceSchema, Model<IRaceSchema>>(
   }
 );
 
+raceSchema.virtual("buildings", {
+  ref: "Building",
+  foreignField: "race",
+  localField: "name",
+});
+
 raceSchema.pre(/^find/, function (next) {
   this.populate({
     path: "buildings",
   });
+
   next();
 });
 
