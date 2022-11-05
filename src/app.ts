@@ -8,7 +8,7 @@ import express, { Request, Response, NextFunction } from "express";
 import rateLimit from "express-rate-limit";
 import morgan from "morgan";
 import { StatusCodeTypes } from "./enums";
-import { userRouter } from "./routes";
+import { userRouter, raceRouter, buildingRouter } from "./routes";
 import { CustomError } from "./utils";
 
 export const app = express();
@@ -34,6 +34,8 @@ app.use(express.static(`${__dirname}/public`));
 /* routes */
 
 app.use("/api/v1/users", userRouter);
+app.use("/api/v1/races", raceRouter);
+app.use("/api/v1/buildings", buildingRouter);
 
 /* error handling */
 

@@ -5,3 +5,5 @@
  **/
 
 export { userRouter } from "./userRoutes";
+export { raceRouter } from "./raceRoutes";
+export { buildingRouter } from "./buildingRoutes";
